@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  jenkins-alpine:
+    image: jenkins/jenkins:alpine
+    restart: always
+    volumes:
+      - $PWD/jenkins_home/:/var/run/jenkins_home/
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 2
+    networks:
+      devops:
+        aliases:
+          - jenkins-alpine
+networks:
+  devops:
