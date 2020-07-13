@@ -4,14 +4,27 @@ services:
     build:
       context: jenkins/
       dockerfile: jenkins.Dockerfile
+    container_name: jenkins
     restart: always
     volumes:
-      - $PWD/jenkins_home/:/var/jenkins_home/
+      - /opt/jenkins_home/:/var/jenkins_home/
     ports:
       - "8080:8080"
     networks:
       devops:
         aliases:
           - jenkins
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    container_name: gitlab-ce
+    ports:
+      - "443:443"
+      - "80:80"
+      - "20:20"
+    volumes:
+      - /opt/gitlab/config:/etc/gitlab:Z
+      - /opt/gitlab/logs:/var/log/gitlab:Z
+      - /opt/gitlab/data:/var/opt/gitlab:Z
 networks:
   devops:
