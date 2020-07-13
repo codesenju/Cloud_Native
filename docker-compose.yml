@@ -19,6 +19,7 @@ services:
     image: gitlab/gitlab-ce:latest
     restart: always
     container_name: gitlab-ce
+    hostname: '$GITLAB_HOSTNAME'
     ports:
       - "443:443"
       - "80:80"
@@ -27,5 +28,33 @@ services:
       - /opt/gitlab/config:/etc/gitlab:Z
       - /opt/gitlab/logs:/var/log/gitlab:Z
       - /opt/gitlab/data:/var/opt/gitlab:Z
+    networks:
+      devops:
+        aliases:
+          - gitlab
+  client:
+    image: vncserver/lubuntu
+    restart: always
+    ports:
+      - "5901:5901"
+    container_name: client
+    networks:
+      devops:
+        aliases:
+          - client
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: always
+    depends_on: 
+      - gitlab-ce
+    container_name: gitlab-runner
+    volumes:
+      -  /opt/gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      devops:
+        aliases:
+          - gitlab-runner
+
 networks:
   devops:
