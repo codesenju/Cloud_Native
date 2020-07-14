@@ -3,3 +3,7 @@ seed
 git
 blueocean
 docker-plugin
+matrix-auth
+docker-workflow
+credentials-binding
+
