@@ -1,0 +1,31 @@
+version: '3.2'
+services:    
+  gitlab-ce:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    container_name: gitlab-ce
+    hostname: '$GITLAB_HOSTNAME'
+    ports:
+      - "443:443"
+      - "8180:80"
+      - "20:20"
+    networks:
+      devops:
+        aliases:
+          - gitlab
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: always
+    depends_on: 
+      - gitlab-ce
+    container_name: gitlab-runner
+    volumes:
+      -  /opt/gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      devops:
+        aliases:
+          - gitlab-runner
+
+networks:
+  devops:
